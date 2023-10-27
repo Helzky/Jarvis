@@ -18,17 +18,24 @@ def main():
 
     def record_text():
         device_index = 1
+        wake_word_detected = False
+        print_once = True
+
         while True:
             try:
-                with sr.Microphone(device_index=device_index) as source:
+                if print_once:
                     print("Listening for the wake word...")
+                    print_once = False
+
+                with sr.Microphone(device_index=device_index) as source:
                     r.adjust_for_ambient_noise(source, duration=0.2)
                     audio = r.listen(source)
                     my_text = r.recognize_google(audio)
                     
                     # Check for the wake word
                     if 'jarvis' in my_text.lower():
-                        # Remove the wake word and return the remaining text
+                        wake_word_detected = True
+                        print_once = True  # Reset the flag to print the message again next time
                         command_text = my_text.lower().replace('jarvis', '', 1).strip()
                         if command_text:
                             return command_text

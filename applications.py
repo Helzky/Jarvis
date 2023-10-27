@@ -24,6 +24,8 @@ def open_webpage(command):
         os.system('start firefox https://www.solvitursystems.com')
     elif "open SolvAssess" in command.lower():
         os.system('start firefox https://solvassess.com/')
+    elif "open Netflix" in command.lower():
+        os.system('start firefox https://www.netflix.com')
     else:
         # If the command doesn't match any predefined web actions, perform a web search
         search_query = command.replace("open ", "", 1)

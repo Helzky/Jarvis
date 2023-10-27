@@ -21,10 +21,18 @@ def main():
         while True:
             try:
                 with sr.Microphone(device_index=device_index) as source:
+                    print("Listening for the wake word...")
                     r.adjust_for_ambient_noise(source, duration=0.2)
                     audio = r.listen(source)
                     my_text = r.recognize_google(audio)
-                    return my_text
+                    
+                    # Check for the wake word
+                    if 'jarvis' in my_text.lower():
+                        # Remove the wake word and return the remaining text
+                        command_text = my_text.lower().replace('jarvis', '', 1).strip()
+                        if command_text:
+                            return command_text
+
             except sr.RequestError as e:
                 print(f"Could not request results; {e}")
                 continue
@@ -33,7 +41,6 @@ def main():
                 continue
 
     def send_to_chatGPT(messages, model="gpt-3.5-turbo"):
-
         response = openai.ChatCompletion.create(
             model=model,
             messages=messages,
